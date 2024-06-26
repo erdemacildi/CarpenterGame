@@ -31,12 +31,15 @@ public:
     UFUNCTION()
     void Interact();
 
+    // Üretim tipini deðiþtirme fonksiyonu
+    UFUNCTION()
+    void ChangeProductionType();
+
     // Hareket fonksiyonlarý
     void MoveForward(float Value);
     void MoveRight(float Value);
     void TurnAtRate(float Rate);
     void LookUpAtRate(float Rate);
-
 
     // Sipariþ tamamlama fonksiyonu
     UFUNCTION(BlueprintCallable, Category = "Orders")

@@ -9,7 +9,7 @@
 
 // Enum tanýmlamasý
 UENUM(BlueprintType)
-enum class EProductType : uint8
+enum class EItemType : uint8
 {
 	Sphere UMETA(DisplayName = "Sphere"),
 	Cone UMETA(DisplayName = "Cone")
@@ -32,19 +32,43 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Üretim fonksiyonu
+	/*// Üretim fonksiyonu
 	UFUNCTION(BlueprintCallable, Category = "Production")
 	void ProduceItem(FString ItemName);
 
 
 	// Üretilecek obje referansý
 	UPROPERTY(EditAnywhere, Category = "Production")
-	TSubclassOf<AActor> ItemToProduce;
+	TSubclassOf<AActor> ItemToProduce;*/
+
+	// Üretim fonksiyonu
+	UFUNCTION(BlueprintCallable, Category = "Production")
+	void ProduceItem();
+
+	// Üretim tipi deðiþkeni
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Production")
+	EItemType ItemType;
+
+	/*/ Mesh bileþenleri
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UStaticMeshComponent* SphereMesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UStaticMeshComponent* ConeMesh;*/
+
 private:
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* CubeMesh;
 
-	// Üretilecek küre mesh bileþeni
 	UPROPERTY(EditAnywhere, Category = "Production")
 	UStaticMesh* SphereMesh;
+
+	UPROPERTY(EditAnywhere, Category = "Production")
+	UStaticMesh* ConeMesh;
+
+	/*// Üretilecek küre mesh bileþeni
+	UPROPERTY(EditAnywhere, Category = "Production")
+	UStaticMesh* SphereMesh;*/
+
+	void SpawnProduct(TSubclassOf<AActor> ProductClass);
 };

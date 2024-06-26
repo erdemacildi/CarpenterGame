@@ -60,6 +60,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
     PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &APlayerCharacter::Interact);
+    PlayerInputComponent->BindAction("ChangeProductionType", IE_Pressed, this, &APlayerCharacter::ChangeProductionType);
 
     PlayerInputComponent->BindAxis("MoveForward", this, &APlayerCharacter::MoveForward);
     PlayerInputComponent->BindAxis("MoveRight", this, &APlayerCharacter::MoveRight);
@@ -88,7 +89,7 @@ void APlayerCharacter::Interact()
             AChoppingMachine* ChoppingMachine = Cast<AChoppingMachine>(InteractedActor);
             if (ChoppingMachine)
             {
-                ChoppingMachine->ProduceItem("Item");
+                ChoppingMachine->ProduceItem();
                 return;
             }
 
@@ -116,6 +117,35 @@ void APlayerCharacter::Interact()
         }
     }
 }
+
+void APlayerCharacter::ChangeProductionType()
+{
+    FHitResult HitResult;
+    FVector Start = FollowCamera->GetComponentLocation();
+    FVector ForwardVector = FollowCamera->GetForwardVector();
+    FVector End = ((ForwardVector * 200.f) + Start);
+    FCollisionQueryParams CollisionParams;
+
+    if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, CollisionParams))
+    {
+        AChoppingMachine* ChoppingMachine = Cast<AChoppingMachine>(HitResult.GetActor());
+        if (ChoppingMachine)
+        {
+            if (ChoppingMachine->ItemType == EItemType::Sphere)
+            {
+                ChoppingMachine->ItemType = EItemType::Cone;
+                UE_LOG(LogTemp, Warning, TEXT("Production Type Changed to Cone"));
+            }
+            else
+            {
+                ChoppingMachine->ItemType = EItemType::Sphere;
+                UE_LOG(LogTemp, Warning, TEXT("Production Type Changed to Sphere"));
+            }
+        }
+    }
+}
+
+
 void APlayerCharacter::MoveForward(float Value)
 {
     if (Value != 0.0f)
@@ -146,15 +176,20 @@ void APlayerCharacter::CompleteOrder(UOrder* Order)
 {
     if (Order)
     {
+        // Sipariþi kontrol etme ve tamamlama iþlemleri
         if (CarriedItem && CarriedItem->GetName().Contains(Order->ItemName))
         {
+            // Sipariþ tamamlandý
             UE_LOG(LogTemp, Warning, TEXT("Order Completed: %s"), *Order->ItemName);
 
+            // Oyuncunun taþýdýðý objeyi serbest býrak
             CarriedItem = nullptr;
             bIsCarryingItem = false;
 
+            // Sipariþi CurrentOrders listesinden çýkar
             CurrentOrders.Remove(Order);
 
+            // Skor ekle
             ACarpenterGameGameModeBase* GameMode = Cast<ACarpenterGameGameModeBase>(GetWorld()->GetAuthGameMode());
             if (GameMode)
             {
