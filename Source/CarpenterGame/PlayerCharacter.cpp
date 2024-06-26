@@ -158,6 +158,13 @@ void APlayerCharacter::CompleteOrder(UOrder* Order)
 
             // Sipariþi CurrentOrders listesinden çýkar
             CurrentOrders.Remove(Order);
+
+            // Skor ekle
+            ACarpenterGameGameModeBase* GameMode = Cast<ACarpenterGameGameModeBase>(GetWorld()->GetAuthGameMode());
+            if (GameMode)
+            {
+                GameMode->AddScore(10);
+            }
         }
     }
 }
