@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "ChoppingMachine.h"
 #include "Order.generated.h"
 
 /**
@@ -20,4 +21,7 @@ public:
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Order")
     FLinearColor ItemColor;
+
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Order")
+    EItemType ItemType;
 };

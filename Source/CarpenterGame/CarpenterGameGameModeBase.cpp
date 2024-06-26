@@ -71,19 +71,28 @@ void ACarpenterGameGameModeBase::CreateOrder()
     UOrder* NewOrder = NewObject<UOrder>();
 
     // Rastgele bir obje ve renk belirliyoruz
-    FString Items[] = { TEXT("Chair"), TEXT("Table"), TEXT("Shelf") };
-    FLinearColor Colors[] = { FLinearColor::Red, FLinearColor::Green, FLinearColor::Blue };
+    FString Items[] = { TEXT("Sphere"), TEXT("Cone") };
+    FLinearColor Colors[] = {  FLinearColor::Yellow, FLinearColor::Blue };
 
-    int32 RandomItemIndex = FMath::RandRange(0, 2);
-    int32 RandomColorIndex = FMath::RandRange(0, 2);
+    int32 RandomItemIndex = FMath::RandRange(0, 1);
+    int32 RandomColorIndex = FMath::RandRange(0, 1);
 
     NewOrder->ItemName = Items[RandomItemIndex];
     NewOrder->ItemColor = Colors[RandomColorIndex];
+    NewOrder->ItemType = (RandomItemIndex == 0) ? EItemType::Sphere : EItemType::Cone;
 
     CurrentOrders.Add(NewOrder);
 
     // Sipariþi yönetmek için diðer iþlemler
-    UE_LOG(LogTemp, Warning, TEXT("New Order Created: %s, Color: %s"), *NewOrder->ItemName, *NewOrder->ItemColor.ToString());
+    if (NewOrder->ItemColor == FLinearColor::Yellow) {
+        UE_LOG(LogTemp, Warning, TEXT("New Order Created: %s, Color: Yellow"), *NewOrder->ItemName);
+    }
+    else {
+        UE_LOG(LogTemp, Warning, TEXT("New Order Created: %s, Color: Blue"), *NewOrder->ItemName);
+    }
+
+
+    //UE_LOG(LogTemp, Warning, TEXT("New Order Created: %s, Color: %s"), *NewOrder->ItemName, *NewOrder->ItemColor.ToString());
 }
 
 void ACarpenterGameGameModeBase::AddScore(int32 Points)
