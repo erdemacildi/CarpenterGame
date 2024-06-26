@@ -33,6 +33,9 @@ APlayerCharacter::APlayerCharacter()
     CarriedItem = nullptr;
     bIsCarryingItem = false;
     bHasPaint = false;
+
+    // Baþlangýç boyama rengi
+    PaintColor = FLinearColor::Yellow;
 }
 
 // Called when the game starts or when spawned
@@ -63,6 +66,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
     PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &APlayerCharacter::Interact);
     PlayerInputComponent->BindAction("ChangeProductionType", IE_Pressed, this, &APlayerCharacter::ChangeProductionType);
     PlayerInputComponent->BindAction("PaintInteract", IE_Pressed, this, &APlayerCharacter::PaintInteract);
+    PlayerInputComponent->BindAction("ChangeColor", IE_Pressed, this, &APlayerCharacter::ChangeColor);
 
     PlayerInputComponent->BindAxis("MoveForward", this, &APlayerCharacter::MoveForward);
     PlayerInputComponent->BindAxis("MoveRight", this, &APlayerCharacter::MoveRight);
@@ -168,6 +172,20 @@ void APlayerCharacter::PaintInteract()
                 }
             }
         }
+    }
+}
+
+void APlayerCharacter::ChangeColor()
+{
+    if (PaintColor == FLinearColor::Yellow)
+    {
+        PaintColor = FLinearColor::Blue;
+        UE_LOG(LogTemp, Warning, TEXT("Color Changed to Blue"));
+    }
+    else
+    {
+        PaintColor = FLinearColor::Yellow;
+        UE_LOG(LogTemp, Warning, TEXT("Color Changed to Yellow"));
     }
 }
 

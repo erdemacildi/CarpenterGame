@@ -38,6 +38,9 @@ public:
     UFUNCTION()
     void ChangeProductionType();
 
+    UFUNCTION()
+    void ChangeColor();
+
     // Hareket fonksiyonlarý
     void MoveForward(float Value);
     void MoveRight(float Value);
@@ -62,6 +65,10 @@ public:
     // Boya alma ve boyama modu deðiþkeni
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Painting")
     bool bHasPaint;
+
+    // Boyama renk deðiþkeni
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Painting")
+    FLinearColor PaintColor;
 
 private:
     // Kamera bileþeni
