@@ -6,6 +6,15 @@
 #include "GameFramework/Actor.h"
 #include "ChoppingMachine.generated.h"
 
+
+// Enum tanýmlamasý
+UENUM(BlueprintType)
+enum class EProductType : uint8
+{
+	Sphere UMETA(DisplayName = "Sphere"),
+	Cone UMETA(DisplayName = "Cone")
+};
+
 UCLASS()
 class CARPENTERGAME_API AChoppingMachine : public AActor
 {

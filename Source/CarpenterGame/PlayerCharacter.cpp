@@ -146,20 +146,15 @@ void APlayerCharacter::CompleteOrder(UOrder* Order)
 {
     if (Order)
     {
-        // Sipariþi kontrol etme ve tamamlama iþlemleri
         if (CarriedItem && CarriedItem->GetName().Contains(Order->ItemName))
         {
-            // Sipariþ tamamlandý
             UE_LOG(LogTemp, Warning, TEXT("Order Completed: %s"), *Order->ItemName);
 
-            // Oyuncunun taþýdýðý objeyi serbest býrak
             CarriedItem = nullptr;
             bIsCarryingItem = false;
 
-            // Sipariþi CurrentOrders listesinden çýkar
             CurrentOrders.Remove(Order);
 
-            // Skor ekle
             ACarpenterGameGameModeBase* GameMode = Cast<ACarpenterGameGameModeBase>(GetWorld()->GetAuthGameMode());
             if (GameMode)
             {
@@ -168,30 +163,3 @@ void APlayerCharacter::CompleteOrder(UOrder* Order)
         }
     }
 }
-
-/*void APlayerCharacter::CompleteOrder(UOrder* Order)
-{
-    if (Order)
-    {
-        // Sipariþi kontrol etme ve tamamlama iþlemleri
-        if (CarriedItem && CarriedItem->GetName().Contains(Order->ItemName))
-        {
-            // Sipariþ tamamlandý
-            UE_LOG(LogTemp, Warning, TEXT("Order Completed: %s"), *Order->ItemName);
-
-            // Oyuncunun taþýdýðý objeyi serbest býrak
-            CarriedItem = nullptr;
-            bIsCarryingItem = false;
-
-            // Sipariþi CurrentOrders listesinden çýkar
-            CurrentOrders.Remove(Order);
-
-            // Skor ekle
-            ACarpenterGameGameModeBase* GameMode = Cast<ACarpenterGameGameModeBase>(GetWorld()->GetAuthGameMode());
-            if (GameMode)
-            {
-                GameMode->AddScore(10);
-            }
-        }
-    }
-}*/
