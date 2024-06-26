@@ -39,14 +39,11 @@ void ADeliveryZone::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, cl
     APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(OtherActor);
     if (PlayerCharacter && PlayerCharacter->bIsCarryingItem)
     {
-        // Teslimat bölgesine girildiðinde, sipariþin tamamlandýðýný kontrol et
         for (UOrder* Order : PlayerCharacter->CurrentOrders)
         {
             if (PlayerCharacter->CarriedItem && PlayerCharacter->CarriedItem->GetName().Contains(Order->ItemName))
             {
-                // Sipariþ tamamlandý
                 PlayerCharacter->CompleteOrder(Order);
-                // Sipariþ listesinden çýkar
                 PlayerCharacter->CurrentOrders.Remove(Order);
                 break;
             }

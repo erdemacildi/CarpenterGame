@@ -5,6 +5,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Camera/CameraComponent.h"
+#include "Order.h"
+#include "ChoppingMachine.h"
+#include "CarpenterGameGameModeBase.h"
+#include "PaintingStation.h"
 #include "PlayerCharacter.generated.h"
 
 UCLASS()
@@ -27,55 +31,45 @@ public:
     // Called to bind functionality to input
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-    // Ýnteraksiyon fonksiyonu
     UFUNCTION()
     void Interact();
 
     UFUNCTION()
     void PaintInteract();
 
-    // Üretim tipini deðiþtirme fonksiyonu
     UFUNCTION()
     void ChangeProductionType();
 
     UFUNCTION()
     void ChangeColor();
 
-    // Hareket fonksiyonlarý
     void MoveForward(float Value);
     void MoveRight(float Value);
     void TurnAtRate(float Rate);
     void LookUpAtRate(float Rate);
 
-    // Sipariþ tamamlama fonksiyonu
     UFUNCTION(BlueprintCallable, Category = "Orders")
     void CompleteOrder(UOrder* Order);
 
-    // Mevcut sipariþler
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Orders")
     TArray<UOrder*> CurrentOrders;
 
-    // Taþýma iþlemleri için deðiþkenler
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Carrying")
     AActor* CarriedItem;
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Carrying")
     bool bIsCarryingItem;
 
-    // Boya alma ve boyama modu deðiþkeni
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Painting")
     bool bHasPaint;
 
-    // Boyama renk deðiþkeni
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Painting")
     FLinearColor PaintColor;
 
 private:
-    // Kamera bileþeni
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
     UCameraComponent* FollowCamera;
 
-    // Turn ve LookUp hýzlarý
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
     float BaseTurnRate;
 

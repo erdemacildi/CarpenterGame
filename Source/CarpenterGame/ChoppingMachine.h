@@ -7,7 +7,6 @@
 #include "ChoppingMachine.generated.h"
 
 
-// Enum tanýmlamasý
 UENUM(BlueprintType)
 enum class EItemType : uint8
 {
@@ -32,29 +31,11 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	/*// Üretim fonksiyonu
-	UFUNCTION(BlueprintCallable, Category = "Production")
-	void ProduceItem(FString ItemName);
-
-
-	// Üretilecek obje referansý
-	UPROPERTY(EditAnywhere, Category = "Production")
-	TSubclassOf<AActor> ItemToProduce;*/
-
-	// Üretim fonksiyonu
 	UFUNCTION(BlueprintCallable, Category = "Production")
 	void ProduceItem();
 
-	// Üretim tipi deðiþkeni
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Production")
 	EItemType ItemType;
-
-	/*/ Mesh bileþenleri
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UStaticMeshComponent* SphereMesh;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UStaticMeshComponent* ConeMesh;*/
 
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -65,10 +46,6 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Production")
 	UStaticMesh* ConeMesh;
-
-	/*// Üretilecek küre mesh bileþeni
-	UPROPERTY(EditAnywhere, Category = "Production")
-	UStaticMesh* SphereMesh;*/
 
 	void SpawnProduct(TSubclassOf<AActor> ProductClass);
 };

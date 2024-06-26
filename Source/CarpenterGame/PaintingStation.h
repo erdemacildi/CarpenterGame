@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -23,16 +21,16 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Renk deðiþtirme fonksiyonu
+	// Changing Color
 	UFUNCTION(BlueprintCallable, Category = "Painting")
 	void ChangeItemColor(AActor* Item);
 
 private:
-	// Silindir mesh bileþeni
+	// Cylinder Mesh
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* CylinderMesh;
 
-	// Mesh bileþeni
+	// Mesh
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* MeshComponent;
 };

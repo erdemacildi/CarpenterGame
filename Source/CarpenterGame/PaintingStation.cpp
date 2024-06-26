@@ -13,7 +13,7 @@ APaintingStation::APaintingStation()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-    // Silindir mesh bileþenini oluþturma ve yapýlandýrma
+    // Creating Cylinder Mesh
     CylinderMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CylinderMesh"));
     RootComponent = CylinderMesh;
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CylinderMeshAsset(TEXT("StaticMesh'/Engine/BasicShapes/Cylinder.Cylinder'"));
@@ -40,23 +40,6 @@ void APaintingStation::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-
-//void APaintingStation::ChangeItemColor(AActor* Item, FLinearColor NewColor)
-//{
-//    if (Item)
-//    {
-//        UStaticMeshComponent* MeshComp = Item->FindComponentByClass<UStaticMeshComponent>();
-//        if (MeshComp)
-//        {
-//            UMaterialInstanceDynamic* DynamicMaterial = MeshComp->CreateAndSetMaterialInstanceDynamic(0);
-//            if (DynamicMaterial)
-//            {
-//                DynamicMaterial->SetVectorParameterValue("BaseColor", NewColor);
-//                UE_LOG(LogTemp, Warning, TEXT("Changed Color of Item: %s"), *Item->GetName());
-//            }
-//        }
-//    }
-//}
 
 void APaintingStation::ChangeItemColor(AActor* Item)
 {

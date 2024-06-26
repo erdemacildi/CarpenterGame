@@ -13,6 +13,8 @@
 #include "PaintingStation.h"
 #include "Order.h"
 #include "CarpenterGameGameModeBase.h"
+#include "Components/StaticMeshComponent.h"
+#include "Materials/MaterialInstanceDynamic.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -20,21 +22,17 @@ APlayerCharacter::APlayerCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-    // Kamera bileþeni oluþturma ve yapýlandýrma
     FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
     FollowCamera->SetupAttachment(RootComponent);
     FollowCamera->bUsePawnControlRotation = true;
 
-    // Hareket hýzlarý
     BaseTurnRate = 45.f;
     BaseLookUpRate = 45.f;
 
-    // Taþýma deðiþkenlerini baþlatma
     CarriedItem = nullptr;
     bIsCarryingItem = false;
     bHasPaint = false;
 
-    // Baþlangýç boyama rengi
     PaintColor = FLinearColor::Yellow;
 }
 
@@ -50,7 +48,6 @@ void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-    // Taþýnan objeyi oyuncunun önünde tutma
     if (bIsCarryingItem && CarriedItem)
     {
         FVector NewLocation = FollowCamera->GetComponentLocation() + FollowCamera->GetForwardVector() * 200.0f;
@@ -82,7 +79,6 @@ void APlayerCharacter::Interact()
 {
     if (bIsCarryingItem && CarriedItem)
     {
-        // Objeyi býrakma iþlemi
         UStaticMeshComponent* MeshComponent = CarriedItem->FindComponentByClass<UStaticMeshComponent>();
         if (MeshComponent)
         {
@@ -105,7 +101,6 @@ void APlayerCharacter::Interact()
         AActor* InteractedActor = HitResult.GetActor();
         if (InteractedActor)
         {
-            // ChoppingMachine interaksiyonu
             AChoppingMachine* ChoppingMachine = Cast<AChoppingMachine>(InteractedActor);
             if (ChoppingMachine)
             {
@@ -113,7 +108,6 @@ void APlayerCharacter::Interact()
                 return;
             }
 
-            // PaintingStation interaksiyonu
             APaintingStation* PaintingStation = Cast<APaintingStation>(InteractedActor);
             if (PaintingStation && CarriedItem)
             {
@@ -121,12 +115,11 @@ void APlayerCharacter::Interact()
                 return;
             }
 
-            // Üretilen objeyi taþýma iþlemi
             UStaticMeshComponent* MeshComponent = InteractedActor->FindComponentByClass<UStaticMeshComponent>();
             if (MeshComponent)
             {
-                // Objeyi taþýma iþlemi
                 MeshComponent->SetSimulatePhysics(false);
+                MeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
                 CarriedItem = InteractedActor;
                 bIsCarryingItem = true;
             }
@@ -150,7 +143,6 @@ void APlayerCharacter::PaintInteract()
         {
             if (!bHasPaint)
             {
-                // PaintingStation interaksiyonu
                 APaintingStation* PaintingStation = Cast<APaintingStation>(InteractedActor);
                 if (PaintingStation)
                 {
@@ -161,13 +153,16 @@ void APlayerCharacter::PaintInteract()
             }
             else
             {
-                // Üretilen objeyi boyama iþlemi
                 UStaticMeshComponent* MeshComponent = InteractedActor->FindComponentByClass<UStaticMeshComponent>();
                 if (MeshComponent)
                 {
-                    MeshComponent->SetVectorParameterValueOnMaterials("BaseColor", FVector(1.0f, 1.0f, 1.0f));
-                    bHasPaint = false;
-                    UE_LOG(LogTemp, Warning, TEXT("Object Painted"));
+                    UMaterialInstanceDynamic* DynamicMaterial = MeshComponent->CreateAndSetMaterialInstanceDynamic(0);
+                    if (DynamicMaterial)
+                    {
+                        DynamicMaterial->SetVectorParameterValue("BaseColor", PaintColor);
+                        bHasPaint = false;
+                        UE_LOG(LogTemp, Warning, TEXT("Object Painted"));
+                    }
                     return;
                 }
             }
@@ -248,20 +243,15 @@ void APlayerCharacter::CompleteOrder(UOrder* Order)
 {
     if (Order)
     {
-        // Sipariþi kontrol etme ve tamamlama iþlemleri
         if (CarriedItem && CarriedItem->GetName().Contains(Order->ItemName))
         {
-            // Sipariþ tamamlandý
             UE_LOG(LogTemp, Warning, TEXT("Order Completed: %s"), *Order->ItemName);
 
-            // Oyuncunun taþýdýðý objeyi serbest býrak
             CarriedItem = nullptr;
             bIsCarryingItem = false;
 
-            // Sipariþi CurrentOrders listesinden çýkar
             CurrentOrders.Remove(Order);
 
-            // Skor ekle
             ACarpenterGameGameModeBase* GameMode = Cast<ACarpenterGameGameModeBase>(GetWorld()->GetAuthGameMode());
             if (GameMode)
             {
