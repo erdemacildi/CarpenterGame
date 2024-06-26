@@ -22,6 +22,9 @@ APaintingStation::APaintingStation()
         CylinderMesh->SetStaticMesh(CylinderMeshAsset.Object);
         CylinderMesh->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
     }
+
+    MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
+    RootComponent = MeshComponent;
 }
 
 // Called when the game starts or when spawned

@@ -32,6 +32,7 @@ APlayerCharacter::APlayerCharacter()
     // Taþýma deðiþkenlerini baþlatma
     CarriedItem = nullptr;
     bIsCarryingItem = false;
+    bHasPaint = false;
 }
 
 // Called when the game starts or when spawned
@@ -61,6 +62,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
     Super::SetupPlayerInputComponent(PlayerInputComponent);
     PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &APlayerCharacter::Interact);
     PlayerInputComponent->BindAction("ChangeProductionType", IE_Pressed, this, &APlayerCharacter::ChangeProductionType);
+    PlayerInputComponent->BindAction("PaintInteract", IE_Pressed, this, &APlayerCharacter::PaintInteract);
 
     PlayerInputComponent->BindAxis("MoveForward", this, &APlayerCharacter::MoveForward);
     PlayerInputComponent->BindAxis("MoveRight", this, &APlayerCharacter::MoveRight);
@@ -74,6 +76,20 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 void APlayerCharacter::Interact()
 {
+    if (bIsCarryingItem && CarriedItem)
+    {
+        // Objeyi býrakma iþlemi
+        UStaticMeshComponent* MeshComponent = CarriedItem->FindComponentByClass<UStaticMeshComponent>();
+        if (MeshComponent)
+        {
+            MeshComponent->SetSimulatePhysics(true);
+            MeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+        }
+        CarriedItem = nullptr;
+        bIsCarryingItem = false;
+        return;
+    }
+
     FHitResult HitResult;
     FVector Start = FollowCamera->GetComponentLocation();
     FVector ForwardVector = FollowCamera->GetForwardVector();
@@ -101,15 +117,12 @@ void APlayerCharacter::Interact()
                 return;
             }
 
-            if (bIsCarryingItem)
-            {
-                // Objeyi býrakma iþlemi
-                CarriedItem = nullptr;
-                bIsCarryingItem = false;
-            }
-            else
+            // Üretilen objeyi taþýma iþlemi
+            UStaticMeshComponent* MeshComponent = InteractedActor->FindComponentByClass<UStaticMeshComponent>();
+            if (MeshComponent)
             {
                 // Objeyi taþýma iþlemi
+                MeshComponent->SetSimulatePhysics(false);
                 CarriedItem = InteractedActor;
                 bIsCarryingItem = true;
             }
@@ -117,6 +130,47 @@ void APlayerCharacter::Interact()
         }
     }
 }
+
+void APlayerCharacter::PaintInteract()
+{
+    FHitResult HitResult;
+    FVector Start = FollowCamera->GetComponentLocation();
+    FVector ForwardVector = FollowCamera->GetForwardVector();
+    FVector End = ((ForwardVector * 200.f) + Start);
+    FCollisionQueryParams CollisionParams;
+
+    if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, CollisionParams))
+    {
+        AActor* InteractedActor = HitResult.GetActor();
+        if (InteractedActor)
+        {
+            if (!bHasPaint)
+            {
+                // PaintingStation interaksiyonu
+                APaintingStation* PaintingStation = Cast<APaintingStation>(InteractedActor);
+                if (PaintingStation)
+                {
+                    bHasPaint = true;
+                    UE_LOG(LogTemp, Warning, TEXT("Paint Acquired"));
+                    return;
+                }
+            }
+            else
+            {
+                // Üretilen objeyi boyama iþlemi
+                UStaticMeshComponent* MeshComponent = InteractedActor->FindComponentByClass<UStaticMeshComponent>();
+                if (MeshComponent)
+                {
+                    MeshComponent->SetVectorParameterValueOnMaterials("BaseColor", FVector(1.0f, 1.0f, 1.0f));
+                    bHasPaint = false;
+                    UE_LOG(LogTemp, Warning, TEXT("Object Painted"));
+                    return;
+                }
+            }
+        }
+    }
+}
+
 
 void APlayerCharacter::ChangeProductionType()
 {

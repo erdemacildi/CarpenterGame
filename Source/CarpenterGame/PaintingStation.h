@@ -31,4 +31,8 @@ private:
 	// Silindir mesh bileþeni
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* CylinderMesh;
+
+	// Mesh bileþeni
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* MeshComponent;
 };

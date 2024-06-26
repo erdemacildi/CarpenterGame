@@ -31,6 +31,9 @@ public:
     UFUNCTION()
     void Interact();
 
+    UFUNCTION()
+    void PaintInteract();
+
     // Üretim tipini deðiþtirme fonksiyonu
     UFUNCTION()
     void ChangeProductionType();
@@ -55,6 +58,10 @@ public:
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Carrying")
     bool bIsCarryingItem;
+
+    // Boya alma ve boyama modu deðiþkeni
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Painting")
+    bool bHasPaint;
 
 private:
     // Kamera bileþeni
