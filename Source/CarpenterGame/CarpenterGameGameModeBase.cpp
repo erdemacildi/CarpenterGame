@@ -7,6 +7,8 @@
 #include "ScoreManager.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
+#include "UObject/ConstructorHelpers.h"
+//#include "Blueprint/UserWidget.h"
 
 ACarpenterGameGameModeBase::ACarpenterGameGameModeBase()
 {
@@ -34,6 +36,12 @@ void ACarpenterGameGameModeBase::DecreaseBudget(int32 Amount)
 void ACarpenterGameGameModeBase::BeginPlay()
 {
     Super::BeginPlay();
+
+    // Baþlangýç skorunu ve bütçesini loga yazdýrýn
+    if (ScoreManager)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Game Started! Initial Score: %d, Initial Budget: %d"), ScoreManager->GetScore(), Budget);
+    }
 
     // Sipariþ oluþturmayý belirli aralýklarla tetiklemek için bir timer ayarlayýn
     GetWorldTimerManager().SetTimer(OrderTimerHandle, this, &ACarpenterGameGameModeBase::CreateOrder, 10.0f, true);
@@ -80,9 +88,9 @@ void ACarpenterGameGameModeBase::CreateOrder()
 
 void ACarpenterGameGameModeBase::AddScore(int32 Points)
 {
-    if (ScoreManager)
+    /*if (ScoreManager)
     {
         ScoreManager->AddScore(Points);
         UE_LOG(LogTemp, Warning, TEXT("Score Added: %d, Total Score: %d"), Points, ScoreManager->GetScore());
-    }
+    }*/
 }

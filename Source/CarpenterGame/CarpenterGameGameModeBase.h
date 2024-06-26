@@ -23,6 +23,7 @@ protected:
     virtual void BeginPlay() override;
 
 public:
+
     // Bütçe deðiþkenini tanýmlýyoruz
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Game Budget")
     int32 Budget;
@@ -53,4 +54,7 @@ private:
     // Skor yöneticisi
     UPROPERTY()
     UScoreManager* ScoreManager;
+
+    
+
 };

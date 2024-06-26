@@ -38,6 +38,7 @@ public:
     void LookUpAtRate(float Rate);
 
 
+    // Sipariþ tamamlama fonksiyonu
     UFUNCTION(BlueprintCallable, Category = "Orders")
     void CompleteOrder(UOrder* Order);
 
